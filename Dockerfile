@@ -1,25 +1,26 @@
-# Используйте образ Maven для сборки
+# Use Maven image for building
 FROM maven:3.8.4-jdk-8 AS builder
 
-# Копируйте файлы проекта в рабочую директорию образа
+# Copy project files to the working directory of the image
 WORKDIR /app
 COPY pom.xml .
 COPY src/ ./src/
 
-# Выполните сборку проекта
+# Build the project
 RUN mvn package
 
-# Используйте образ Tomcat в качестве базового образа, но с явным указанием JDK 8
+# Use Tomcat image as the base image, but with explicit JDK 8
 FROM tomcat:9.0-jdk8
 
-# Очистите директорию с веб-приложениями Tomcat от старых .war файлов
+# Clean the Tomcat webapps directory from old .war files
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# Копируйте скомпилированный WAR файл из образа сборки в директорию веб-приложений Tomcat
+# Copy the compiled WAR file from the build image to the Tomcat webapps directory
 COPY --from=builder /app/target/web-app-docker.war /usr/local/tomcat/webapps/
 
-# Откройте порт, который будет использоваться при запуске контейнера
+# Open the port that will be used when the container is launched
 EXPOSE 8080
 
-# Команда, которая будет выполнена при запуске контейнера
+# Command to execute when the container starts
 CMD ["catalina.sh", "run"]
+
