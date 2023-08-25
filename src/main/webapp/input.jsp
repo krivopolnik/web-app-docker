@@ -27,8 +27,12 @@
 </head>
 <body>
 <form action="sumServlet" method="post">
-    <!-- Form and number input fields -->
+    <!-- Number 1 input -->
+    <label for="num1">Number 1:</label>
     <input type="text" id="num1" name="num1"><br><br>
+
+    <!-- Number 2 input -->
+    <label for="num2">Number 2:</label>
     <input type="text" id="num2" name="num2"><br><br>
 
     <!-- Submit button with validation -->

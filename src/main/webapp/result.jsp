@@ -1,8 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <body>
 <!-- Error message output -->
-<div>${requestScope.errorMessage}</div>
 <c:if test="${not empty requestScope.errorMessage}">
   <script>
     showAlert("${requestScope.errorMessage}");
@@ -11,6 +12,7 @@
 
 <!-- Result output -->
 <c:if test="${not empty requestScope.resultMessage}">
-  <p>${requestScope.resultMessage}</p>
+  <p>${resultMessage}</p>
 </c:if>
+
 </body>

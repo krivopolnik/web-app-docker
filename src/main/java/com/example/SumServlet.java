@@ -30,7 +30,12 @@ public class SumServlet extends HttpServlet {
             double sum = num1 + num2;
 
             // Prepare the result message
-            String resultMessage = "Sum: " + sum;
+            String resultMessage;
+            if (sum == Math.floor(sum)) {
+                resultMessage = String.format("Result: %.0f", sum); // If it's an integer
+            } else {
+                resultMessage = String.format("Result: %.1f", sum); // If it's a decimal
+            }
 
             // Store the result message in request scope for display in JSP
             request.setAttribute("resultMessage", resultMessage);
