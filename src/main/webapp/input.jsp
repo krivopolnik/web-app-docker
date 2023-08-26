@@ -1,3 +1,7 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,6 +41,13 @@
 
     <!-- Submit button with validation -->
     <input type="submit" value="Calculate Sum" onclick="return validateForm()">
+
+    <!-- Error message output -->
+    <c:if test="${not empty requestScope.errorMessage}">
+        <script>
+            showAlert("${requestScope.errorMessage}");
+        </script>
+    </c:if>
 </form>
 </body>
 </html>

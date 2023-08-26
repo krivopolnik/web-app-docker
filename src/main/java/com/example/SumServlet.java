@@ -14,11 +14,11 @@ public class SumServlet extends HttpServlet {
             String num2Str = request.getParameter("num2");
 
             // Validate input values using regular expressions
-            if (!num1Str.matches("^\\d*\\.?\\d*$") || !num2Str.matches("^\\d*\\.?\\d*$")) {
+            if (!num1Str.matches("^\\d+(\\.\\d+)?$") || !num2Str.matches("^\\d+(\\.\\d+)?$")) {
                 // Handle the case of invalid input
                 String errorMessage = "Invalid input. Please enter valid numbers.";
                 request.setAttribute("errorMessage", errorMessage);
-                request.getRequestDispatcher("result.jsp").forward(request, response);
+                request.getRequestDispatcher("input.jsp").forward(request, response);
                 return; // Exit the servlet to prevent further processing
             }
 
@@ -46,8 +46,7 @@ public class SumServlet extends HttpServlet {
             // Handle the case of invalid input
             String errorMessage = "Invalid input. Please enter valid numbers.";
             request.setAttribute("errorMessage", errorMessage);
-            request.getRequestDispatcher("result.jsp").forward(request, response);
+            request.getRequestDispatcher("input.jsp").forward(request, response);
         }
-
     }
 }
