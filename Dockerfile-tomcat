@@ -9,7 +9,8 @@ COPY src/ ./src/
 # Build the project
 RUN mvn package
 
-# Use the Tomcat image as the base image, with explicit JDK 8 specification
+
+# Use the previously built Maven artifact in the Tomcat image
 FROM tomcat:9.0-jdk8
 
 # Clean the Tomcat webapps directory from old .war files

@@ -1,0 +1,10 @@
+# Use the PostgreSQL image as the base
+FROM postgres:13
+
+# Define environment variables for configuring the database
+ENV POSTGRES_DB sum_db
+ENV POSTGRES_USER admin
+ENV POSTGRES_PASSWORD admin
+
+# Copy initialization scripts and files
+COPY init.sql /docker-entrypoint-initdb.d/

@@ -1,6 +1,9 @@
 package com.example;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -9,35 +12,54 @@ import javax.servlet.http.HttpServletResponse;
 public class SumServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            // Get input values from request parameters
-            String num1Str = request.getParameter("num1");
-            String num2Str = request.getParameter("num2");
+            double num1 = parseDoubleParameter(request.getParameter("num1"));
+            double num2 = parseDoubleParameter(request.getParameter("num2"));
+            double sum = calculateSum(num1, num2);
 
-            // Parse input values to double
-            double num1 = Double.parseDouble(num1Str);
-            double num2 = Double.parseDouble(num2Str);
+            storeSumInDatabase(num1, num2, sum);
 
-            // Calculate the sum
-            double sum = num1 + num2;
-
-            // Prepare the result message
-            String resultMessage;
-            if (sum == Math.floor(sum)) {
-                resultMessage = String.format("Result: %.0f", sum); // If it's an integer
-            } else {
-                resultMessage = String.format("Result: %.1f", sum); // If it's a decimal
-            }
-
-            // Store the result message in request scope for display in JSP
-            request.setAttribute("resultMessage", resultMessage);
-
-            // Forward the request to the same page for displaying the result
+            request.setAttribute("resultMessage", formatResultMessage(sum));
             request.getRequestDispatcher("result.jsp").forward(request, response);
         } catch (NumberFormatException e) {
-            // Handle the case of invalid input
-            String errorMessage = "Invalid input. Please enter valid numbers.";
-            request.setAttribute("errorMessage", errorMessage);
-            request.getRequestDispatcher("input.jsp").forward(request, response);
+            handleInvalidInput(request, response);
+        } catch (SQLException e) {
+            handleDatabaseError(e);
         }
+    }
+
+    private double parseDoubleParameter(String parameter) throws NumberFormatException {
+        return Double.parseDouble(parameter);
+    }
+
+    private double calculateSum(double num1, double num2) {
+        return num1 + num2;
+    }
+
+    private void storeSumInDatabase(double num1, double num2, double sum) throws SQLException {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            // TODO java.sql.SQLException: No suitable driver found for jdbc:postgresql://db:5432/sum_db
+            String insertQuery = "INSERT INTO sum_results (num1, num2, result) VALUES (?, ?, ?)";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
+                preparedStatement.setDouble(1, num1);
+                preparedStatement.setDouble(2, num2);
+                preparedStatement.setDouble(3, sum);
+                preparedStatement.executeUpdate();
+            }
+        }
+    }
+
+    private String formatResultMessage(double sum) {
+        return (sum == Math.floor(sum)) ? String.format("Result: %.0f", sum) : String.format("Result: %.1f", sum);
+    }
+
+    private void handleInvalidInput(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String errorMessage = "Invalid input. Please enter valid numbers.";
+        request.setAttribute("errorMessage", errorMessage);
+        request.getRequestDispatcher("input.jsp").forward(request, response);
+    }
+
+    private void handleDatabaseError(SQLException e) {
+        e.printStackTrace();
+        // Handle database error here
     }
 }

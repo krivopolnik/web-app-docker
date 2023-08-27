@@ -1,0 +1,18 @@
+version: '3'
+services:
+  web-app:
+    build:
+      context: .
+      dockerfile: Dockerfile-tomcat
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile-postgres
+    environment:
+      POSTGRES_DB: sum_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
