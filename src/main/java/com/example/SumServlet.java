@@ -13,15 +13,6 @@ public class SumServlet extends HttpServlet {
             String num1Str = request.getParameter("num1");
             String num2Str = request.getParameter("num2");
 
-            // Validate input values using regular expressions
-            if (!num1Str.matches("^\\d+(\\.\\d+)?$") || !num2Str.matches("^\\d+(\\.\\d+)?$")) {
-                // Handle the case of invalid input
-                String errorMessage = "Invalid input. Please enter valid numbers.";
-                request.setAttribute("errorMessage", errorMessage);
-                request.getRequestDispatcher("input.jsp").forward(request, response);
-                return; // Exit the servlet to prevent further processing
-            }
-
             // Parse input values to double
             double num1 = Double.parseDouble(num1Str);
             double num2 = Double.parseDouble(num2Str);
